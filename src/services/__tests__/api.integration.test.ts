@@ -6,7 +6,7 @@ import axios from 'axios';
 // These tests will be skipped if the API is not available
 describe('ReactiveApiService Integration Tests', () => {
   let apiService: ReactiveApiService;
-  const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:9001';
+  const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:9001';
   let isApiAvailable = false;
 
   beforeAll(async () => {

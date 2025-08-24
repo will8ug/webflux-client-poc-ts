@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Configure axios for integration tests
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:9001';
+const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:9001';
 
 // Global axios configuration for integration tests
 axios.defaults.baseURL = API_BASE_URL;

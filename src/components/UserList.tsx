@@ -45,13 +45,57 @@ export const UserList: React.FC = () => {
   }
 
   if (error) {
+    const isNetworkError = error.message.includes('Network Error') || 
+                          error.message.includes('timeout') ||
+                          error.message.includes('CORS') ||
+                          error.status === 500;
+                          
     return (
       <div className="user-list-container">
         <div className="error-message">
-          <h3>Error loading users</h3>
-          <p>{error.message}</p>
+          {isNetworkError ? (
+            <>
+              <h3>🔧 WebFlux API 连接问题</h3>
+              <div className="api-status-info">
+                <p><strong>当前状态：</strong>无法连接到 WebFlux 后端服务</p>
+                <p><strong>期望地址：</strong>http://localhost:9001/api/users</p>
+                
+                <div className="solution-steps">
+                  <h4>📋 解决方案：</h4>
+                  <ol>
+                    <li><strong>启动 WebFlux 后端：</strong>
+                      <br />在您的 WebFlux 项目目录中运行：
+                      <code>mvn spring-boot:run</code> 或 <code>./mvnw spring-boot:run</code>
+                    </li>
+                    <li><strong>验证服务运行：</strong>
+                      <br />访问 <a href="http://localhost:9001/api/users" target="_blank">http://localhost:9001/api/users</a>
+                    </li>
+                    <li><strong>检查 CORS 配置：</strong>
+                      <br />确保 WebFlux 后端允许来自 localhost:3000 的请求
+                    </li>
+                  </ol>
+                </div>
+                
+                <div className="demo-info">
+                  <h4>💡 关于这个演示：</h4>
+                  <p>这是一个 <strong>响应式编程</strong> 演示应用，展示如何使用 RxJS 与 WebFlux API 进行响应式通信。</p>
+                  <ul>
+                    <li>✨ 非阻塞 HTTP 请求</li>
+                    <li>🔄 自动重试机制（已重试 3 次）</li>
+                    <li>⚡ 实时数据流处理</li>
+                    <li>🛡️ 优雅的错误处理</li>
+                  </ul>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3>Error loading users</h3>
+              <p>{error.message}</p>
+            </>
+          )}
           <button onClick={refetch} className="retry-button">
-            Retry
+            🔄 重试连接
           </button>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { map, catchError, retry, timeout, shareReplay } from 'rxjs/operators';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { User, CreateUserRequest, ApiError } from '@/types/user';
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:9001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9001';
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -29,9 +29,9 @@ const handleError = (error: AxiosError): Observable<never> => {
 
 // Generic HTTP methods with reactive patterns
 export class ReactiveApiService {
-  private client: any;
+  private client: typeof apiClient;
 
-  constructor(httpClient?: any) {
+  constructor(httpClient?: typeof apiClient) {
     this.client = httpClient || apiClient;
   }
 
