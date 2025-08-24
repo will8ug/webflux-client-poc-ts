@@ -55,35 +55,35 @@ export const UserList: React.FC = () => {
         <div className="error-message">
           {isNetworkError ? (
             <>
-              <h3>🔧 WebFlux API 连接问题</h3>
+              <h3>🔧 WebFlux API Connection Issue</h3>
               <div className="api-status-info">
-                <p><strong>当前状态：</strong>无法连接到 WebFlux 后端服务</p>
-                <p><strong>期望地址：</strong>http://localhost:9001/api/users</p>
+                <p><strong>Current Status:</strong> Unable to connect to WebFlux backend service</p>
+                <p><strong>Expected Address:</strong> http://localhost:9001/api/users</p>
                 
                 <div className="solution-steps">
-                  <h4>📋 解决方案：</h4>
+                  <h4>📋 Solution:</h4>
                   <ol>
-                    <li><strong>启动 WebFlux 后端：</strong>
-                      <br />在您的 WebFlux 项目目录中运行：
-                      <code>mvn spring-boot:run</code> 或 <code>./mvnw spring-boot:run</code>
+                    <li><strong>Start WebFlux Backend:</strong>
+                      <br />Run in your WebFlux project directory:
+                      <code>mvn spring-boot:run</code> or <code>./mvnw spring-boot:run</code>
                     </li>
-                    <li><strong>验证服务运行：</strong>
-                      <br />访问 <a href="http://localhost:9001/api/users" target="_blank">http://localhost:9001/api/users</a>
+                    <li><strong>Verify Service Running:</strong>
+                      <br />Visit <a href="http://localhost:9001/api/users" target="_blank">http://localhost:9001/api/users</a>
                     </li>
-                    <li><strong>检查 CORS 配置：</strong>
-                      <br />确保 WebFlux 后端允许来自 localhost:3000 的请求
+                    <li><strong>Check CORS Configuration:</strong>
+                      <br />Ensure WebFlux backend allows requests from localhost:3000
                     </li>
                   </ol>
                 </div>
                 
                 <div className="demo-info">
-                  <h4>💡 关于这个演示：</h4>
-                  <p>这是一个 <strong>响应式编程</strong> 演示应用，展示如何使用 RxJS 与 WebFlux API 进行响应式通信。</p>
+                  <h4>💡 About This Demo:</h4>
+                  <p>This is a <strong>Reactive Programming</strong> demo application showcasing RxJS with WebFlux API reactive communication.</p>
                   <ul>
-                    <li>✨ 非阻塞 HTTP 请求</li>
-                    <li>🔄 自动重试机制（已重试 3 次）</li>
-                    <li>⚡ 实时数据流处理</li>
-                    <li>🛡️ 优雅的错误处理</li>
+                    <li>✨ Non-blocking HTTP requests</li>
+                    <li>🔄 Auto-retry mechanism (retried 3 times)</li>
+                    <li>⚡ Real-time data stream processing</li>
+                    <li>🛡️ Graceful error handling</li>
                   </ul>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const UserList: React.FC = () => {
             </>
           )}
           <button onClick={refetch} className="retry-button">
-            🔄 重试连接
+            🔄 Retry Connection
           </button>
         </div>
       </div>

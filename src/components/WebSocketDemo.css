@@ -1,0 +1,418 @@
+.websocket-demo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.websocket-demo h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+/* 连接状态面板 */
+.connection-panel {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.connection-panel h3 {
+  color: #495057;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.status-indicator {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.status-indicator.connecting {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-indicator.connected {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #b8daff;
+}
+
+.status-indicator.disconnected {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-indicator.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.connection-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.connect-button, .disconnect-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.connect-button {
+  background: #28a745;
+  color: white;
+}
+
+.connect-button:hover {
+  background: #218838;
+}
+
+.disconnect-button {
+  background: #dc3545;
+  color: white;
+}
+
+.disconnect-button:hover {
+  background: #c82333;
+}
+
+/* 响应式数据流面板 */
+.reactive-stream-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reactive-stream-panel h3 {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.description {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  color: #1565c0;
+  line-height: 1.6;
+}
+
+.stream-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.start-button, .stop-button, .create-user-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-button {
+  background: #007bff;
+  color: white;
+}
+
+.start-button:hover {
+  background: #0056b3;
+}
+
+.stop-button {
+  background: #6c757d;
+  color: white;
+}
+
+.stop-button:hover {
+  background: #545b62;
+}
+
+.create-user-button {
+  background: #17a2b8;
+  color: white;
+}
+
+.create-user-button:hover {
+  background: #138496;
+}
+
+/* 最新事件 */
+.latest-event {
+  background: #f1f3f4;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.latest-event h4 {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.event-info {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.event-type {
+  background: #007bff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.event-time {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.event-payload {
+  background: #2d3748;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0;
+}
+
+/* 用户列表 */
+.users-stream h4 {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.user-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-2px);
+}
+
+.user-card h5 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.user-card p {
+  color: #6c757d;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.user-card small {
+  color: #adb5bd;
+  font-size: 0.8rem;
+}
+
+/* 实时消息面板 */
+.realtime-messages-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.realtime-messages-panel h3 {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.message-input {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.message-input input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.message-input button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.message-input button:first-of-type {
+  background: #28a745;
+  color: white;
+}
+
+.message-input button:first-of-type:hover:not(:disabled) {
+  background: #218838;
+}
+
+.message-input button:first-of-type:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.clear-button {
+  background: #ffc107 !important;
+  color: #212529 !important;
+}
+
+.clear-button:hover {
+  background: #e0a800 !important;
+}
+
+.messages-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.message-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f3f4;
+  align-items: center;
+}
+
+.message-item:last-child {
+  border-bottom: none;
+}
+
+.message-type {
+  background: #6f42c1;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 100px;
+  text-align: center;
+}
+
+.message-content {
+  flex: 1;
+  color: #495057;
+}
+
+.message-time {
+  color: #6c757d;
+  font-size: 0.8rem;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* 技术说明 */
+.tech-explanation {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tech-explanation h3 {
+  color: #495057;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.explanation-content h4 {
+  color: #2c3e50;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.explanation-content h4:first-child {
+  margin-top: 0;
+}
+
+.explanation-content ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.explanation-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  color: #495057;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .websocket-demo {
+    padding: 1rem;
+  }
+  
+  .stream-controls, .connection-controls {
+    flex-direction: column;
+  }
+  
+  .message-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .message-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .message-type, .message-time {
+    min-width: auto;
+  }
+}

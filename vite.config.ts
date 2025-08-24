@@ -16,6 +16,7 @@ export default defineConfig({
         target: 'http://localhost:9001',
         changeOrigin: true,
         secure: false,
+        ws: true, // Support WebSocket proxy
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
@@ -25,6 +26,23 @@ export default defineConfig({
           });
           proxy.on('proxyRes', (proxyRes, req, _res) => {
             console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
+      },
+      '/websocket': {
+        target: 'ws://localhost:9001',
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('WebSocket proxy error', err);
+          });
+          proxy.on('open', () => {
+            console.log('WebSocket proxy connection opened');
+          });
+          proxy.on('close', () => {
+            console.log('WebSocket proxy connection closed');
           });
         },
       },

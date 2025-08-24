@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { UserList } from '@/components/UserList';
 import { StreamingDemo } from '@/components/StreamingDemo';
+import { WebSocketDemo } from '@/components/WebSocketDemo';
 import './App.css';
 
-type TabType = 'users' | 'streaming';
+type TabType = 'users' | 'streaming' | 'websocket';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('users');
@@ -28,11 +29,19 @@ export const App: React.FC = () => {
         >
           Reactive Streaming
         </button>
+        <button
+          className={`nav-button ${activeTab === 'websocket' ? 'active' : ''}`}
+          onClick={() => setActiveTab('websocket')}
+        >
+          WebSocket Demo
+        </button>
       </nav>
 
       <main className="app-main">
         {activeTab === 'users' && <UserList />}
         {activeTab === 'streaming' && <StreamingDemo />}
+        {activeTab === 'websocket' && <WebSocketDemo />}
+        {activeTab === 'websocket' && <WebSocketDemo />}
       </main>
 
       <footer className="app-footer">
