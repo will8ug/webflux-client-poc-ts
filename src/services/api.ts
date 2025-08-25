@@ -3,10 +3,12 @@ import { map, catchError, retry, timeout, shareReplay } from 'rxjs/operators';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { User, CreateUserRequest, ApiError } from '@/types/user';
 
-// Use Vite proxy in development environment, environment variables in production
+const USE_DIRECT_API = import.meta.env.VITE_USE_DIRECT_API === 'true';
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9001';
+
 const API_BASE_URL = import.meta.env.DEV 
-  ? '' // Use relative path in development environment, through Vite proxy
-  : import.meta.env.VITE_API_BASE_URL || 'http://localhost:9001';
+  ? (USE_DIRECT_API ? BACKEND_URL : '') // Development: use direct URL or proxy based on env var
+  : BACKEND_URL; // Production: always use direct URL
 
 // Create axios instance with default config
 const apiClient = axios.create({
