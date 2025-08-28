@@ -153,7 +153,7 @@ export const UserList: React.FC = () => {
           </button>
         </div>
         
-        {users && users.length > 0 ? (
+        {users && Array.isArray(users) && users.length > 0 ? (
           <div className="users-grid">
             {users.map((user: User) => (
               <div key={user.id} className="user-card">
