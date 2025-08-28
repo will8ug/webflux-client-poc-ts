@@ -48,13 +48,9 @@ This project demonstrates several key reactive programming concepts:
    npm install
    ```
 
-2. **Start the WebFlux API** (in the `../webflux-demo` directory):
-   ```bash
-   cd ../webflux-demo
-   mvn spring-boot:run
-   ```
+2. **Start the WebFlux API**
    
-   Note: The WebFlux API runs on port 9001 by default.
+   Note: Assume the WebFlux API runs on port 9001 by default.
 
 3. **Start the development server**:
    ```bash
