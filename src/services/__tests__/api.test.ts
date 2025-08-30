@@ -1,3 +1,25 @@
+// Mock EventSource before importing the API module
+class MockEventSource {
+  onmessage: ((event: any) => void) | null = null;
+  onerror: ((event: any) => void) | null = null;
+  close = jest.fn();
+  
+  constructor(url: string) {
+    setTimeout(() => {
+      if (this.onmessage) {
+        this.onmessage({ data: JSON.stringify({ id: 1, name: 'Alice', email: 'alice@example.com' }) });
+        this.onmessage({ data: JSON.stringify({ id: 2, name: 'Bob', email: 'bob@example.com' }) });
+      }
+      if (this.onerror) {
+        this.onerror(new Event('error'));
+      }
+    }, 0);
+  }
+}
+
+// Mock EventSource globally
+(global as any).EventSource = MockEventSource;
+
 import { ReactiveApiService } from '../api';
 import { of, throwError } from 'rxjs';
 
@@ -10,62 +32,62 @@ describe('ReactiveApiService', () => {
       get: jest.fn(),
       post: jest.fn(),
       delete: jest.fn(),
+      defaults: { baseURL: '' }
     };
-    apiService = new ReactiveApiService(mockApiClient);
+    
+    // 使用测试配置创建服务实例，绕过 import.meta.env
+    const testConfig = {
+      USE_DIRECT_API: false,
+      BACKEND_URL: 'http://localhost:9001',
+      DEV: true
+    };
+    
+    apiService = new ReactiveApiService(mockApiClient, testConfig);
     jest.clearAllMocks();
   });
 
   describe('getAllUsers', () => {
-    it('should return users successfully', (done) => {
-      const mockUsers = [
-        { id: 1, name: 'Alice', email: 'alice@example.com' },
-        { id: 2, name: 'Bob', email: 'bob@example.com' }
-      ];
-
-      mockApiClient.get.mockResolvedValueOnce({ data: mockUsers });
-
+    it('should return users from SSE stream', (done) => {
       apiService.getAllUsers().subscribe({
         next: (users) => {
-          expect(users).toEqual(mockUsers);
-          expect(mockApiClient.get).toHaveBeenCalledWith('/api/users');
+          expect(users).toHaveLength(2);
+          expect(users[0].name).toBe('Alice');
+          expect(users[1].name).toBe('Bob');
           done();
         },
         error: done
       });
     });
 
-    it('should handle network errors with retry', (done) => {
-      const networkError = new Error('Network Error');
-      mockApiClient.get
-        .mockRejectedValueOnce(networkError)
-        .mockRejectedValueOnce(networkError)
-        .mockResolvedValueOnce({ data: [] });
-
-      const subscription = apiService.getAllUsers().subscribe({
+    it('should handle SSE connection errors gracefully', (done) => {
+      // 使用一个会立即失败的 EventSource
+      const FailingEventSource = class {
+        onmessage: ((event: any) => void) | null = null;
+        onerror: ((event: any) => void) | null = null;
+        close = jest.fn();
+        
+        constructor() {
+          setTimeout(() => {
+            if (this.onerror) {
+              this.onerror(new Event('error'));
+            }
+          }, 0);
+        }
+      };
+      
+      const originalEventSource = (global as any).EventSource;
+      (global as any).EventSource = FailingEventSource;
+      
+      apiService.getAllUsers().subscribe({
         next: (users) => {
           expect(users).toEqual([]);
-          // Since retry happens with delay, we need to check if it was called at least twice
-          expect(mockApiClient.get).toHaveBeenCalledWith('/api/users');
-          subscription.unsubscribe();
+          // 恢复原始 EventSource
+          (global as any).EventSource = originalEventSource;
           done();
         },
         error: (err) => {
-          // If it still fails after retries, that's also acceptable
-          expect(err.message).toBe('Network Error');
-          done();
-        }
-      });
-    });
-
-    it('should handle timeout errors', (done) => {
-      const timeoutError = new Error('timeout of 10000ms exceeded');
-      mockApiClient.get.mockRejectedValue(timeoutError);
-
-      apiService.getAllUsers().subscribe({
-        next: () => done.fail('Should not succeed'),
-        error: (error) => {
-          expect(error.message).toContain('timeout');
-          done();
+          (global as any).EventSource = originalEventSource;
+          done(err);
         }
       });
     });

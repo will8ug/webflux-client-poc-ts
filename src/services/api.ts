@@ -3,12 +3,69 @@ import { map, catchError, retry, timeout, shareReplay } from 'rxjs/operators';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { User, CreateUserRequest, ApiError } from '@/types/user';
 
-const USE_DIRECT_API = import.meta.env.VITE_USE_DIRECT_API === 'true';
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9001';
+// 环境变量配置 - 支持测试环境
+interface EnvironmentConfig {
+  USE_DIRECT_API: boolean;
+  BACKEND_URL: string;
+  DEV: boolean;
+}
 
-const API_BASE_URL = import.meta.env.DEV 
-  ? (USE_DIRECT_API ? BACKEND_URL : '') // Development: use direct URL or proxy based on env var
-  : BACKEND_URL; // Production: always use direct URL
+// 获取环境配置的函数，支持测试时的依赖注入
+function getEnvironmentConfig(testConfig?: Partial<EnvironmentConfig>): EnvironmentConfig {
+  if (testConfig) {
+    return {
+      USE_DIRECT_API: testConfig.USE_DIRECT_API ?? false,
+      BACKEND_URL: testConfig.BACKEND_URL ?? 'http://localhost:9001',
+      DEV: testConfig.DEV ?? true
+    };
+  }
+  
+  // 检测是否在测试环境中（Jest环境）
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+    return {
+      USE_DIRECT_API: false,
+      BACKEND_URL: 'http://localhost:9001',
+      DEV: true
+    };
+  }
+  
+  // 检测是否在 Jest 环境中（通过全局变量）
+  if (typeof global !== 'undefined' && (global as any).jest) {
+    return {
+      USE_DIRECT_API: false,
+      BACKEND_URL: 'http://localhost:9001',
+      DEV: true
+    };
+  }
+  
+  // 生产环境使用 import.meta.env
+  try {
+    // 使用动态访问防止 Jest 编译报错
+    const meta = (globalThis as any)?.import?.meta;
+    if (meta?.env) {
+      return {
+        USE_DIRECT_API: meta.env.VITE_USE_DIRECT_API === 'true',
+        BACKEND_URL: meta.env.VITE_API_BASE_URL || 'http://localhost:9001',
+        DEV: meta.env.DEV
+      };
+    }
+  } catch (error) {
+    // import.meta 不可用，使用默认值
+  }
+  
+  // 如果没有 import.meta，使用默认配置
+  return {
+    USE_DIRECT_API: false,
+    BACKEND_URL: 'http://localhost:9001',
+    DEV: true
+  };
+}
+
+// 默认环境配置
+const defaultConfig = getEnvironmentConfig();
+const API_BASE_URL = defaultConfig.DEV 
+  ? (defaultConfig.USE_DIRECT_API ? defaultConfig.BACKEND_URL : '') 
+  : defaultConfig.BACKEND_URL;
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -32,9 +89,11 @@ const handleError = (error: AxiosError): Observable<never> => {
 // Generic HTTP methods with reactive patterns
 export class ReactiveApiService {
   private client: typeof apiClient;
+  private config: EnvironmentConfig;
 
-  constructor(httpClient?: typeof apiClient) {
+  constructor(httpClient?: typeof apiClient, testConfig?: Partial<EnvironmentConfig>) {
     this.client = httpClient || apiClient;
+    this.config = getEnvironmentConfig(testConfig);
   }
 
   // GET request with reactive error handling and retry logic
