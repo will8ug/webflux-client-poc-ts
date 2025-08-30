@@ -27,6 +27,6 @@ module.exports = {
   testTimeout: 10000,
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   transformIgnorePatterns: [
-    'node_modules/(?!(rxjs)/)',
+    'node_modules/(?!(rxjs)/)/',
   ],
 };

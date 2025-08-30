@@ -87,9 +87,22 @@ describe('UserList', () => {
 
     render(<UserList />);
 
+    expect(screen.getByText('🔧 WebFlux API Connection Issue')).toBeInTheDocument();
+    expect(screen.getByText('Unable to connect to WebFlux backend service')).toBeInTheDocument();
+    expect(screen.getByText('🔄 Retry Connection')).toBeInTheDocument();
+  });
+
+  it('should show simple error message for non-network errors', () => {
+    mockedUseUsers.mockReturnValue({
+      ...mockUseUsersReturn,
+      error: { message: 'Permission denied', status: 403, timestamp: '2023-01-01' }
+    });
+
+    render(<UserList />);
+
     expect(screen.getByText('Error loading users')).toBeInTheDocument();
-    expect(screen.getByText('Failed to load users')).toBeInTheDocument();
-    expect(screen.getByText('Retry')).toBeInTheDocument();
+    expect(screen.getByText('Permission denied')).toBeInTheDocument();
+    expect(screen.getByText('🔄 Retry Connection')).toBeInTheDocument();
   });
 
   it('should call refetch when retry button is clicked', () => {
@@ -100,7 +113,7 @@ describe('UserList', () => {
 
     render(<UserList />);
 
-    fireEvent.click(screen.getByText('Retry'));
+    fireEvent.click(screen.getByText('🔄 Retry Connection'));
     expect(mockUseUsersReturn.refetch).toHaveBeenCalled();
   });
 
@@ -115,10 +128,15 @@ describe('UserList', () => {
     fireEvent.change(emailInput, { target: { value: 'newuser@example.com' } });
     fireEvent.click(createButton);
 
-    expect(mockUseCreateUserReturn.mutate).toHaveBeenCalledWith({
-      name: 'New User',
-      email: 'newuser@example.com'
-    });
+    expect(mockUseCreateUserReturn.mutate).toHaveBeenCalledWith(
+      {
+        name: 'New User',
+        email: 'newuser@example.com'
+      },
+      {
+        onSuccess: expect.any(Function)
+      }
+    );
   });
 
   it('should disable create button when form is invalid', () => {
@@ -167,7 +185,12 @@ describe('UserList', () => {
     const deleteButtons = screen.getAllByText('Delete');
     fireEvent.click(deleteButtons[0]); // Delete first user (Alice)
 
-    expect(mockUseDeleteUserReturn.mutate).toHaveBeenCalledWith(1);
+    expect(mockUseDeleteUserReturn.mutate).toHaveBeenCalledWith(
+      1,
+      {
+        onSuccess: expect.any(Function)
+      }
+    );
   });
 
   it('should show loading state when deleting user', () => {
@@ -218,9 +241,14 @@ describe('UserList', () => {
 
     // The form should be cleared after successful creation
     // This is handled by the component's internal state
-    expect(mockUseCreateUserReturn.mutate).toHaveBeenCalledWith({
-      name: 'New User',
-      email: 'newuser@example.com'
-    });
+    expect(mockUseCreateUserReturn.mutate).toHaveBeenCalledWith(
+      {
+        name: 'New User',
+        email: 'newuser@example.com'
+      },
+      {
+        onSuccess: expect.any(Function)
+      }
+    );
   });
 });

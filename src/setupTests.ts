@@ -1,5 +1,19 @@
 import '@testing-library/jest-dom';
 
+// Mock import.meta for Jest
+Object.defineProperty(global, 'import', {
+  value: {
+    meta: {
+      env: {
+        VITE_USE_DIRECT_API: 'false',
+        VITE_API_BASE_URL: 'http://localhost:9001',
+        DEV: true
+      }
+    }
+  },
+  writable: true
+});
+
 // Mock fetch for tests
 global.fetch = jest.fn();
 
