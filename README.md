@@ -66,11 +66,6 @@ This project demonstrates several key reactive programming concepts:
 npm test
 ```
 
-### Integration Tests (requires WebFlux API running)
-```bash
-npm run test:integration
-```
-
 ### Test Coverage
 ```bash
 npm run test:coverage
