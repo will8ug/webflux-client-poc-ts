@@ -14,9 +14,6 @@ const API_BASE_URL = import.meta.env.DEV
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Export for testing
@@ -73,7 +70,44 @@ export class ReactiveApiService {
 
   // User-specific methods
   getAllUsers(): Observable<User[]> {
-    return this.get<User[]>('/api/users');
+    console.log('API: getAllUsers called, handling SSE stream from:', '/api/users');
+    
+    // Handle Server-Sent Events stream and collect all users
+    return new Observable<User[]>((subscriber) => {
+      const users: User[] = [];
+      
+      // Construct correct URL for EventSource
+      const baseURL = this.client.defaults.baseURL || '';
+      const url = baseURL ? `${baseURL}/api/users` : '/api/users';
+      console.log('API: EventSource URL:', url);
+      
+      // Use EventSource for SSE
+      const eventSource = new EventSource(url);
+      
+      eventSource.onmessage = (event) => {
+        try {
+          const user: User = JSON.parse(event.data);
+          users.push(user);
+          console.log('API: Received user from SSE:', user);
+        } catch (error) {
+          console.error('API: Error parsing SSE data:', error);
+        }
+      };
+      
+      eventSource.onerror = (error) => {
+        console.log('API: SSE stream completed or error occurred');
+        eventSource.close();
+        // Return collected users when stream ends
+        console.log('API: getAllUsers final result:', users);
+        subscriber.next([...users]);
+        subscriber.complete();
+      };
+      
+      // Cleanup function
+      return () => {
+        eventSource.close();
+      };
+    });
   }
 
   getUserById(id: number): Observable<User> {

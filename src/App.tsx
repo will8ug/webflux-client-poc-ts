@@ -41,7 +41,6 @@ export const App: React.FC = () => {
         {activeTab === 'users' && <UserList />}
         {activeTab === 'streaming' && <StreamingDemo />}
         {activeTab === 'websocket' && <WebSocketDemo />}
-        {activeTab === 'websocket' && <WebSocketDemo />}
       </main>
 
       <footer className="app-footer">
