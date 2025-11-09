@@ -148,33 +148,6 @@ apiService.getUsersStream().subscribe({
 const { data: users, loading, error, refetch } = useUsers();
 ```
 
-## 🎯 Key Benefits of Reactive Programming
-
-### 1. **Non-blocking Operations**
-- All HTTP requests are non-blocking
-- UI remains responsive during data loading
-- Efficient resource utilization
-
-### 2. **Automatic Error Recovery**
-- Built-in retry mechanisms
-- Graceful error handling
-- User-friendly error messages
-
-### 3. **Memory Efficiency**
-- Streaming processes data as it arrives
-- Automatic cleanup of subscriptions
-- No memory leaks
-
-### 4. **Backpressure Handling**
-- RxJS automatically handles data flow control
-- Prevents overwhelming the client with data
-- Smooth user experience
-
-### 5. **Real-time Updates**
-- Streaming data from WebFlux
-- Live updates without polling
-- Efficient real-time communication
-
 ## 🔄 Integration with WebFlux
 
 This frontend is designed to work seamlessly with your Spring WebFlux API:
